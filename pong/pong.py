@@ -37,7 +37,7 @@ class Ball(pygame.sprite.Sprite):
     def __init__(self):
         super(Ball, self).__init__()
         self.pos = [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]
-        self.speed = [-1,1]
+        self.speed = [random.uniform(1,3),random.uniform(1,3)]
         self.radius = 10
 
     def update(self, player1 , player2):
@@ -61,6 +61,8 @@ class Ball(pygame.sprite.Sprite):
         and platform1_pos[1] <= self.pos[1] - self.radius <= platform1_pos[1] + PLATFORM_HEIGHT+ self.radius):
             self.speed[0] = -self.speed[0]
             player1.score += 1
+            player1.speed += 0.2
+            player2.speed += 0.2
             self.speed[0] += 0.2 
             self.speed[1] += 0.2 
 
@@ -69,8 +71,10 @@ class Ball(pygame.sprite.Sprite):
         and platform2_pos[1] <= self.pos[1] + self.radius <= platform2_pos[1] + PLATFORM_HEIGHT + self.radius):
             self.speed[0] = -self.speed[0]
             player2.score += 1
-            self.speed[0] += 0.2 
-            self.speed[1] += 0.2 
+            self.speed[0] -= 0.2 
+            self.speed[1] -= 0.2 
+            player1.speed += 0.2
+            player2.speed += 0.2
         
         #check if ball is out of bounds:
         if (self.pos[0] <= 0):
@@ -90,7 +94,7 @@ class Player1(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(center=(PLATFORM_WIDTH/2, PLATFORM_HEIGHT/2))
         self.lives = 3
         self.score = 0
-        self.speed = 2
+        self.speed = 4
 
     def update(self, pressed_keys):
         if pressed_keys[K_w] and self.rect.y >0 :
@@ -108,7 +112,7 @@ class Player2(pygame.sprite.Sprite):
         self.rect = self.surf.get_rect(center=(SCREEN_WIDTH-PLATFORM_WIDTH/2, PLATFORM_HEIGHT/2))
         self.lives = 3
         self.score = 0
-        self.speed = 2
+        self.speed = 4
 
     def update(self, pressed_keys):
             if pressed_keys[K_UP] and self.rect.y >0 :
