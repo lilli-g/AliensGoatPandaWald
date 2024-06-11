@@ -70,7 +70,6 @@ class Ball(pygame.sprite.Sprite):
         if (platform2_pos[0] <= self.pos[0] + self.radius <= platform2_pos[0] + PLATFORM_WIDTH
         and platform2_pos[1] <= self.pos[1] + self.radius <= platform2_pos[1] + PLATFORM_HEIGHT + self.radius):
             self.speed[0] = -self.speed[0]
-            player2.score += 1
             self.speed[0] -= 0.2 
             self.speed[1] -= 0.2 
             player1.speed += 0.2
@@ -93,7 +92,6 @@ class Player1(pygame.sprite.Sprite):
         self.surf.fill(player1_color)
         self.rect = self.surf.get_rect(center=(PLATFORM_WIDTH/2, PLATFORM_HEIGHT/2))
         self.lives = 3
-        self.score = 0
         self.speed = 4
 
     def update(self, pressed_keys):
@@ -111,7 +109,6 @@ class Player2(pygame.sprite.Sprite):
         self.surf.fill(player2_color)
         self.rect = self.surf.get_rect(center=(SCREEN_WIDTH-PLATFORM_WIDTH/2, PLATFORM_HEIGHT/2))
         self.lives = 3
-        self.score = 0
         self.speed = 4
 
     def update(self, pressed_keys):
@@ -121,17 +118,6 @@ class Player2(pygame.sprite.Sprite):
                 self.rect.move_ip(0, self.speed)
             else:
              self.rect.move_ip(0, 0)
-
-
-def draw_heart(x, y, size):
-    points = []
-    for angle in range(0, 360):
-        radian = math.radians(angle)
-        x = size * 16 * math.sin(radian) ** 3  # Adjusted x-coordinate calculation for size scaling
-        y = size * (13 * math.cos(radian) - 8 * math.cos(2 * radian) - 3 * math.cos(3 * radian) - 0.5 * math.cos(4 * radian)) * -1  # Adjusted y-coordinate calculation for size scaling and to make the tip less pointy
-        points.append((int(x) + x, int(y) + y))
-    pygame.draw.polygon(screen, red, points)
-
 
 #funktions:
 def wait_for_key():
@@ -169,7 +155,7 @@ def speed_up_screen():
 def game_over_player1_screen(player1, player2):
     screen.fill((0,0,0))
     show_text_on_screen("Game Over", 50, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 3)
-    show_text_on_screen(f"Your final score: {player1.score}", 30,SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2)
+    show_text_on_screen(f"Your final score: {player1.lives}", 30,SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2)
     show_text_on_screen("Congratulations!", 50, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 3)
     show_text_on_screen(f"Your final score: {player2.lives}", 30, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 2)
     show_text_on_screen("Press any key to restart...", 20, y_position= SCREEN_HEIGHT *2 // 3) 
@@ -181,7 +167,7 @@ def game_over_player2_screen(player1, player2):
     show_text_on_screen("Congratulations!", 50, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 3)
     show_text_on_screen(f"Your final score: {player1.lives}", 30,SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2)
     show_text_on_screen("Game Over", 50, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 3)
-    show_text_on_screen(f"Your final score: {player2.score}", 30, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 2)
+    show_text_on_screen(f"Your final score: {player2.lives}", 30, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 2)
     show_text_on_screen("Press any key to restart...", 20, y_position= SCREEN_HEIGHT*2 // 3) 
     pygame.display.flip()
     wait_for_key()
@@ -190,7 +176,7 @@ def game_over_player2_screen(player1, player2):
 clock = pygame.time.Clock()
 #set up window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-emojii_font = pygame.font.Font("C:\Windows\Fonts\seguiemj.ttf", 20)
+emojii_font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
 font = pygame.font.Font(None, 20)
 #initialize player
 player1 = Player1()
@@ -233,14 +219,6 @@ while running:
         player1 = Player1()
         player2 = Player2()
         ball = Ball()
-
-    score_text = font.render(f"Score: {player1.score}   Lives: {player1.lives}", True, player1_color)
-    score_rect = score_text.get_rect(topleft=(10, info_line_y))
-    screen.blit(score_text, score_rect)
-
-    score_text = font.render(f"Score: {player2.score}   Lives: {player2.lives}", True, player2_color)
-    score_rect = score_text.get_rect(topright=(SCREEN_WIDTH-10, info_line_y))
-    screen.blit(score_text, score_rect)
 
     score_text = emojii_font.render("❤"* player1.lives , True, player1_color)
     score_rect = score_text.get_rect(topright=(SCREEN_WIDTH//2 -40, info_line_y))
