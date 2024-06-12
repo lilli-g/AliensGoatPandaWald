@@ -3,6 +3,7 @@ import Alien
 import pygame
 import sys
 import random
+import numpy as np
 
 pygame.init()
 
@@ -33,6 +34,12 @@ font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
 
 
 #FUnktions:
+def calculate_weapon_position(panda):
+    vector = (pygame.mouse.get_pos()[0] -  panda.rect.centerx, pygame.mouse.get_pos()[1] -  panda.rect.centery)
+    vector= (vector/ np.linalg.norm(vector))*25
+    end_of_weapon = (panda.rect.centerx + vector[0], panda.rect.centery + vector[1])
+    return end_of_weapon
+
 def wait_for_key():
     waiting = True
     while waiting:
@@ -101,6 +108,9 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     panda.update(pressed_keys,SCREEN_WIDTH, SCREEN_HEIGHT)
+    end_of_weapon = calculate_weapon_position(panda)
+
+    pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
 
     for alien in aliens:
         alien.update(panda,SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -108,7 +118,7 @@ while running:
 
     screen.blit(panda.icon,panda.rect) 
 
-    score_text = font.render(f"Heath: {int(panda.health)}" , True, red)
+    score_text = font.render(f"Heath: {int(panda.health)}" , True, purple)
     score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
     screen.blit(score_text, score_rect)
 
