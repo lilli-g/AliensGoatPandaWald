@@ -1,9 +1,11 @@
 import Panda
 import Alien
+import ammo
 import pygame
 import sys
 import random
 import numpy as np
+import time
 
 pygame.init()
 
@@ -34,11 +36,11 @@ font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
 
 
 #FUnktions:
-def calculate_weapon_position(panda):
+def get_aim(panda):
     vector = (pygame.mouse.get_pos()[0] -  panda.rect.centerx, pygame.mouse.get_pos()[1] -  panda.rect.centery)
     vector= (vector/ np.linalg.norm(vector))*25
-    end_of_weapon = (panda.rect.centerx + vector[0], panda.rect.centery + vector[1])
-    return end_of_weapon
+    
+    return vector
 
 def wait_for_key():
     waiting = True
@@ -87,6 +89,7 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 #initialize player and aliens
 panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
 aliens = [Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))) for  i in range(0,1)]
+trees = pygame.sprite.Group()
 
 #run until user quits
 running = True 
@@ -108,7 +111,19 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     panda.update(pressed_keys,SCREEN_WIDTH, SCREEN_HEIGHT)
-    end_of_weapon = calculate_weapon_position(panda)
+
+    aim = get_aim(panda)
+    end_of_weapon = (panda.rect.centerx + aim[0], panda.rect.centery + aim[1])
+
+    timer = time.time()
+    tree = ammo.Tree(panda.rect.center, aim)
+    tree.update(aliens,SCREEN_WIDTH,SCREEN_HEIGHT)
+    screen.blit(tree.immage,tree.rect)
+
+    if timer - time.time() >= 0.1:
+        trees.add(ammo.Tree())
+    
+    
 
     pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
 

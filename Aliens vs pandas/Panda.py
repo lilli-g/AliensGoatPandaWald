@@ -15,31 +15,6 @@ from pygame.locals import (
     K_d
 )
 
-class Weapon:
-    def __init__(self,panda, size = 5, ):
-        super(Weapon, self).__init__()
-        self.size = size
-        self.vector = (pygame.mouse.get_pos()[0] -  panda.rect.centerx, pygame.mouse.get_pos()[1] -  panda.rect.centery)
-        self.vector= (self.vector/ np.linalg.norm(self.vector)) *size
-    
-    def update(self,panda,mouse):
-        self.vector = (mouse[0] -  panda.rect.centerx, mouse[1] -  panda.rect.centery)
-        self.vector= self.vector/ np.linalg.norm(self.vector)
-
-
-class Tree(pygame.sprite.Sprite):
-    def __init__(self,speed,pos, size = 1):
-        super(Tree, self).__init__()
-        self.size = size
-        self.speed = speed
-        self.font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", self.size)
-        self.icon = self.font.render("🌲" , True,(255,255,255))
-        self.rect = self.icon.get_rect(topright=(pos[0], pos[1]))
-
-    #def update(self,pressed_keys):
-      #löschen wenn out of bounds!!  
-
-
 class Panda(pygame.sprite.Sprite):
     def __init__(self, size = 30, pos=(200,200)):
         super(Panda, self).__init__()
@@ -50,7 +25,6 @@ class Panda(pygame.sprite.Sprite):
         self.rect = self.icon.get_rect(topright=(pos[0], pos[1]))
         self.health =10
         self.score = 0
-        self.weapon = Weapon(self)
 
     def update(self,pressed_keys, SCREEN_WIDTH, SCREEN_HEIGHT):
 
