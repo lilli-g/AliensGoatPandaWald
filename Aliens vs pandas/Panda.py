@@ -16,13 +16,15 @@ from pygame.locals import (
 
 
 class Panda(pygame.sprite.Sprite):
-    def __init__(self, size = 20, pos=(200,200)):
+    def __init__(self, size = 30, pos=(200,200)):
         super(Panda, self).__init__()
         self.size = size
         self.speed = 2
         self.font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", self.size)
         self.icon = self.font.render("🐼" , True,(255,255,255))
         self.rect = self.icon.get_rect(topright=(pos[0], pos[1]))
+        self.health =10
+        self.score = 0
 
     def update(self,pressed_keys, SCREEN_WIDTH, SCREEN_HEIGHT):
 

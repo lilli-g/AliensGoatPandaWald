@@ -2,6 +2,7 @@ import Panda
 import Alien
 import pygame
 import sys
+import random
 
 pygame.init()
 
@@ -28,6 +29,7 @@ red = (255, 0, 0)
 white = (255, 255, 255)
 purple =(234, 144, 255)
 orange =(255, 204, 153)
+font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
 
 
 #FUnktions:
@@ -58,6 +60,14 @@ def start_screen():
     pygame.display.flip()
     wait_for_key()
 
+def game_over_screen():
+    screen.fill((0,0,0))
+    show_text_on_screen("Game Over", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
+    show_text_on_screen(f"Your final score: {panda.score}", 30, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    show_text_on_screen("Press any key to restart...", 30, y_position= SCREEN_HEIGHT*2 // 3) 
+    pygame.display.flip()
+    wait_for_key()
+
 
 
 
@@ -67,8 +77,9 @@ clock = pygame.time.Clock()
 #set up window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-#initialize player
+#initialize player and aliens
 panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
+aliens = [Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))) for  i in range(0,1)]
 
 #run until user quits
 running = True 
@@ -90,7 +101,23 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     panda.update(pressed_keys,SCREEN_WIDTH, SCREEN_HEIGHT)
+
+    for alien in aliens:
+        alien.update(panda,SCREEN_WIDTH, SCREEN_HEIGHT)
+        screen.blit(alien.icon,alien.rect)
+
     screen.blit(panda.icon,panda.rect) 
+
+    score_text = font.render(f"Heath: {int(panda.health)}" , True, red)
+    score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
+    screen.blit(score_text, score_rect)
+
+    if panda.health <=0 :
+        game_over_screen()
+        start_screen()
+        panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
+        aliens = [Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))) for  i in range(0,1)]
+
 
     pygame.display.flip()
 
