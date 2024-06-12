@@ -27,14 +27,17 @@ class Panda(pygame.sprite.Sprite):
     def update(self,pressed_keys, SCREEN_WIDTH, SCREEN_HEIGHT):
 
         #is panda out of border? --> teleport
-        if self.rect.x <= 0:
-            self.rect = self.icon.get_rect(bottomleft=(SCREEN_WIDTH, self.rect.y))
-        elif self.rect.x >= SCREEN_WIDTH:
-            self.rect = self.icon.get_rect(bottomleft=(0, self.rect.y))
-        elif self.rect.y <= 0:
-            self.rect = self.icon.get_rect(topright=(self.rect.x, SCREEN_HEIGHT))
-        elif self.rect.y >= SCREEN_HEIGHT:
-            self.rect = self.icon.get_rect(topright=(self.rect.x, 0))
+        if self.rect.centerx < 0:
+            self.rect.centerx = SCREEN_WIDTH-self.size
+        elif self.rect.centerx > SCREEN_WIDTH:
+            self.rect.centerx = 0+self.size
+
+        if self.rect.centery < 0:
+            self.rect.centery = SCREEN_HEIGHT-self.size
+        elif self.rect.centery > SCREEN_HEIGHT:
+            self.rect.centery = 0+self.size
+        
+        #if not out of brder: move in direktion indicated by keys
         elif pressed_keys[K_w]:
                 self.rect.move_ip(0, -self.speed)
         elif pressed_keys[K_s]:

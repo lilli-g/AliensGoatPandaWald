@@ -90,7 +90,6 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     panda.update(pressed_keys,SCREEN_WIDTH, SCREEN_HEIGHT)
-    print(panda.rect)
     screen.blit(panda.icon,panda.rect) 
 
     pygame.display.flip()
