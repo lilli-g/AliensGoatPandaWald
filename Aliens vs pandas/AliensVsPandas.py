@@ -7,6 +7,7 @@ import random
 import numpy as np
 import time
 
+font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
 
 
@@ -32,7 +33,7 @@ red = (255, 0, 0)
 white = (255, 255, 255)
 purple =(234, 144, 255)
 orange =(255, 204, 153)
-font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
+font = pygame.font.Font(font_path, 20)
 
 
 #FUnktions:

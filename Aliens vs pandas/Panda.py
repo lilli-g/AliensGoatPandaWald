@@ -1,8 +1,9 @@
 import pygame
 import numpy as np
 
+font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
-font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
+font = pygame.font.Font(font_path, 20)
 from pygame.locals import (
     K_UP,
     K_DOWN,
@@ -20,7 +21,7 @@ class Panda(pygame.sprite.Sprite):
         super(Panda, self).__init__()
         self.size = size
         self.speed = 2
-        self.font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", self.size)
+        self.font = pygame.font.Font(font_path, self.size)
         self.icon = self.font.render("🐼" , True,(255,255,255))
         self.rect = self.icon.get_rect(topright=(pos[0], pos[1]))
         self.health =10
