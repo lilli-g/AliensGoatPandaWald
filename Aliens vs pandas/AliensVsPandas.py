@@ -8,9 +8,10 @@ import numpy as np
 import time
 
 #to DO:
-#aliens -> Bambus
+#aliens -> forest
 #scoring system for Panda
 #GOAT
+#power ups
 
 font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
@@ -98,7 +99,7 @@ panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
 aliens =pygame.sprite.Group()
 trees = pygame.sprite.Group()
 bambus = pygame.sprite.Group()
-
+forrest = pygame.sprite.Group()
 
 #run until user quits
 running = True 
@@ -124,7 +125,7 @@ while running:
     pressed_keys = pygame.key.get_pressed()
     mouse = pygame.mouse.get_pos()
 
-    panda.update(pressed_keys,SCREEN_WIDTH, SCREEN_HEIGHT)
+    panda.update(pressed_keys,forrest,SCREEN_WIDTH, SCREEN_HEIGHT)
 
     aim = get_aim(panda,mouse)
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
@@ -143,12 +144,15 @@ while running:
         alien_timer = time.time()
 
     #aliens
-    aliens.update(screen,panda,bambus,SCREEN_WIDTH, SCREEN_HEIGHT)
+    aliens.update(screen,panda,forrest,SCREEN_WIDTH, SCREEN_HEIGHT)
     aliens.draw(screen)
 
     #bambus
     bambus.update(panda)
     bambus.draw(screen)
+
+    #forrest
+    forrest.draw()
 
     pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
 

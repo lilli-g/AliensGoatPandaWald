@@ -29,6 +29,13 @@ class Tree(pygame.sprite.Sprite):
         else:
             self.rect.move_ip(self.speed*self.aim[0], self.speed*self.aim[1])
 
+class Forest(pygame.sprite.Sprite):
+    def __init__(self,pos):
+        super(Bambus, self).__init__()
+        self.size = 15
+        self.font = pygame.font.Font(font_path, self.size)
+        self.image = self.font.render("🎋" , True,(255,255,255))
+        self.rect = self.image.get_rect(topright=(pos[0], pos[1]))
         
 class Bambus(pygame.sprite.Sprite):
     def __init__(self,pos):
