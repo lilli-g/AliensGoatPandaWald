@@ -7,6 +7,10 @@ import random
 import numpy as np
 import time
 
+#to DO:
+#aliens -> Bambus
+#scoring system for Panda
+#GOAT
 
 font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
@@ -89,13 +93,19 @@ alien_timer = time.time()
 #set up window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
-#initialize player and aliens
+#initialize player and aliens,...
 panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
 aliens =pygame.sprite.Group()
 trees = pygame.sprite.Group()
+bambus = pygame.sprite.Group()
+
 
 #run until user quits
 running = True 
+
+
+
+
 
 start_screen()
 
@@ -120,7 +130,7 @@ while running:
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
     
     #trees
-    if  time.time()- tree_timer >= 1:
+    if  time.time()- tree_timer >= panda.shooting_speed:
         trees.add(ammo.Tree(panda.rect.center, aim))
         tree_timer = time.time()
     
@@ -131,18 +141,21 @@ while running:
     if  time.time()- alien_timer >= 3:
         aliens.add(Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))))
         alien_timer = time.time()
-        print(aliens)
 
     #aliens
-    aliens.update(screen,panda,SCREEN_WIDTH, SCREEN_HEIGHT)
+    aliens.update(screen,panda,bambus,SCREEN_WIDTH, SCREEN_HEIGHT)
     aliens.draw(screen)
+
+    #bambus
+    bambus.update(panda)
+    bambus.draw(screen)
 
     pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
 
     screen.blit(panda.icon,panda.rect) 
 
-    score_text = font.render(f"Heath: {int(panda.health)}" , True, purple)
-    score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
+    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((1-1/panda.shooting_speed)*10)}" , True, purple)
+    score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2-50, info_line_y))
     screen.blit(score_text, score_rect)
 
     if panda.health <=0 :
