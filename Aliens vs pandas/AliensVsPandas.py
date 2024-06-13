@@ -7,6 +7,7 @@ import random
 import numpy as np
 import time
 
+
 font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
 
@@ -37,10 +38,9 @@ font = pygame.font.Font(font_path, 20)
 
 
 #FUnktions:
-def get_aim(panda):
-    vector = (pygame.mouse.get_pos()[0] -  panda.rect.centerx, pygame.mouse.get_pos()[1] -  panda.rect.centery)
-    vector= (vector/ np.linalg.norm(vector))*25
-    
+def get_aim(panda,mouse):
+    vector = (mouse[0] -  panda.rect.centerx, mouse[1] -  panda.rect.centery)
+    vector= vector/ np.linalg.norm(vector)
     return vector
 
 def wait_for_key():
@@ -64,7 +64,7 @@ def start_screen():
     panda = Panda.Panda(size =150, pos= (SCREEN_WIDTH//3, SCREEN_HEIGHT//2-100))
     alien = Alien.Alien(size= 150, pos= ((SCREEN_WIDTH//3) *3-150, SCREEN_HEIGHT//2-110))
     screen.blit(panda.icon,panda.rect)
-    screen.blit(alien.icon,alien.rect)
+    screen.blit(alien.image,alien.rect)
     show_text_on_screen("Pandas vs. Aliens", 50,y_position = SCREEN_HEIGHT // 4)
     show_text_on_screen("Press any key to start...", 30, y_position =SCREEN_HEIGHT // 3)
     pygame.display.flip()
@@ -84,12 +84,14 @@ def game_over_screen():
 
 
 clock = pygame.time.Clock()
+tree_timer = time.time()
+alien_timer = time.time()
 #set up window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 #initialize player and aliens
 panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
-aliens = [Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))) for  i in range(0,1)]
+aliens =pygame.sprite.Group()
 trees = pygame.sprite.Group()
 
 #run until user quits
@@ -110,27 +112,32 @@ while running:
     screen.fill((0, 0, 0))    
 
     pressed_keys = pygame.key.get_pressed()
+    mouse = pygame.mouse.get_pos()
 
     panda.update(pressed_keys,SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    aim = get_aim(panda)
-    end_of_weapon = (panda.rect.centerx + aim[0], panda.rect.centery + aim[1])
-
-    timer = time.time()
-    tree = ammo.Tree(panda.rect.center, aim)
-    tree.update(aliens,SCREEN_WIDTH,SCREEN_HEIGHT)
-    screen.blit(tree.immage,tree.rect)
-
-    if timer - time.time() >= 0.1:
-        trees.add(ammo.Tree())
+    aim = get_aim(panda,mouse)
+    end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
     
+    #trees
+    if  time.time()- tree_timer >= 1:
+        trees.add(ammo.Tree(panda.rect.center, aim))
+        tree_timer = time.time()
     
+    trees.update(aliens,SCREEN_WIDTH,SCREEN_HEIGHT)
+    trees.draw(screen)
+
+    
+    if  time.time()- alien_timer >= 3:
+        aliens.add(Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))))
+        alien_timer = time.time()
+        print(aliens)
+
+    #aliens
+    aliens.update(screen,panda,SCREEN_WIDTH, SCREEN_HEIGHT)
+    aliens.draw(screen)
 
     pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
-
-    for alien in aliens:
-        alien.update(panda,SCREEN_WIDTH, SCREEN_HEIGHT)
-        screen.blit(alien.icon,alien.rect)
 
     screen.blit(panda.icon,panda.rect) 
 

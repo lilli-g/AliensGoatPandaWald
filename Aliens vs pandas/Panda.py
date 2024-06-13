@@ -24,7 +24,7 @@ class Panda(pygame.sprite.Sprite):
         self.font = pygame.font.Font(font_path, self.size)
         self.icon = self.font.render("🐼" , True,(255,255,255))
         self.rect = self.icon.get_rect(topright=(pos[0], pos[1]))
-        self.health =10
+        self.health =100
         self.score = 0
 
     def update(self,pressed_keys, SCREEN_WIDTH, SCREEN_HEIGHT):
