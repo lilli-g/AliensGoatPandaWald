@@ -3,7 +3,7 @@ import random
 import sys
 import math
 
-
+font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
 from pygame.locals import (
     K_UP,
@@ -60,7 +60,6 @@ class Ball(pygame.sprite.Sprite):
         if (platform1_pos[0] <= self.pos[0] - self.radius <= platform1_pos[0] + PLATFORM_WIDTH
         and platform1_pos[1] <= self.pos[1] - self.radius <= platform1_pos[1] + PLATFORM_HEIGHT+ self.radius):
             self.speed[0] = -self.speed[0]
-            player1.score += 1
             player1.speed += 0.2
             player2.speed += 0.2
             self.speed[0] += 0.2 
@@ -155,10 +154,8 @@ def speed_up_screen():
 def game_over_player1_screen(player1, player2):
     screen.fill((0,0,0))
     show_text_on_screen("Game Over", 50, SCREEN_WIDTH // 4, SCREEN_HEIGHT // 3)
-    show_text_on_screen(f"Your final score: {player1.lives}", 30,SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2)
     show_text_on_screen("Congratulations!", 50, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 3)
-    show_text_on_screen(f"Your final score: {player2.lives}", 30, (SCREEN_WIDTH // 4) *3, SCREEN_HEIGHT // 2)
-    show_text_on_screen("Press any key to restart...", 20, y_position= SCREEN_HEIGHT *2 // 3) 
+    show_text_on_screen("Press any key to restart...", 30, y_position= SCREEN_HEIGHT *2 // 3) 
     pygame.display.flip()
     wait_for_key()
 
@@ -176,7 +173,7 @@ def game_over_player2_screen(player1, player2):
 clock = pygame.time.Clock()
 #set up window
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-emojii_font = pygame.font.Font("C:\\Windows\\Fonts\\seguiemj.ttf", 20)
+emojii_font = pygame.font.Font(font_path, 20)
 font = pygame.font.Font(None, 20)
 #initialize player
 player1 = Player1()
