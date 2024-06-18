@@ -24,14 +24,14 @@ class Tree(pygame.sprite.Sprite):
         #collision mit aliens
         for alien in aliens.sprites():
             distance_alien= np.linalg.norm((alien.rect.centerx-self.rect.centerx , alien.rect.centery-self.rect.centery))
-            if distance_alien <= alien.size//2:
+            if distance_alien <= (alien.size+self.size)//2:
                 alien.health -=1
         else:
             self.rect.move_ip(self.speed*self.aim[0], self.speed*self.aim[1])
 
-class Forest(pygame.sprite.Sprite):
+class Forrest(pygame.sprite.Sprite):
     def __init__(self,pos):
-        super(Bambus, self).__init__()
+        super(Forrest, self).__init__()
         self.size = 15
         self.font = pygame.font.Font(font_path, self.size)
         self.image = self.font.render("🎋" , True,(255,255,255))
@@ -51,5 +51,5 @@ class Bambus(pygame.sprite.Sprite):
         if distance_panda <= panda.size//2:
             self.tick -= 1
         if self.tick <= 0:
-            panda.shooting_speed = panda.shooting_speed*0.9
+            panda.shooting_speed += 1
             self.kill()

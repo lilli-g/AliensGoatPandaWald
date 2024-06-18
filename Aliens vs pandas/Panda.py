@@ -28,8 +28,7 @@ class Panda(pygame.sprite.Sprite):
         self.health =100
         self.score = 0
 
-    def update(self,pressed_keys,forrest SCREEN_WIDTH, SCREEN_HEIGHT):
-
+    def update(self,pressed_keys,bambus, SCREEN_WIDTH, SCREEN_HEIGHT): #<-> forrest
         #is panda out of border? --> teleport
         if self.rect.centerx < 0:
             self.rect.centerx = SCREEN_WIDTH-self.size
@@ -41,15 +40,14 @@ class Panda(pygame.sprite.Sprite):
         elif self.rect.centery > SCREEN_HEIGHT:
             self.rect.centery = 0+self.size
 
-        #panda near forrest?
-        
+        #panda near forrest?  
                 
         
         #if not out of brder: move in direktion indicated by keys
         elif pressed_keys[K_w]:
                 
-            for tree in forrest:
-                distance_tree= np.linalg.norm((tree.rect.centerx-self.rect.centerx , tree.rect.centery-self.rect.centery-self.speed))
+            for tree in bambus: #<-> forrest
+                distance_tree= np.linalg.norm((tree.rect.centerx-self.rect.centerx , tree.rect.centery-self.rect.centery-self.speed+self.size))
                 if distance_tree <= tree.size//2:
                     self.rect.move_ip(0,0)
                     break

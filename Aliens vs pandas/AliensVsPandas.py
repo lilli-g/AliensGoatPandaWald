@@ -131,7 +131,7 @@ while running:
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
     
     #trees
-    if  time.time()- tree_timer >= panda.shooting_speed:
+    if  time.time()- tree_timer >= 1/panda.shooting_speed:
         trees.add(ammo.Tree(panda.rect.center, aim))
         tree_timer = time.time()
     
@@ -144,7 +144,7 @@ while running:
         alien_timer = time.time()
 
     #aliens
-    aliens.update(screen,panda,forrest,SCREEN_WIDTH, SCREEN_HEIGHT)
+    aliens.update(screen,panda,bambus,SCREEN_WIDTH, SCREEN_HEIGHT)
     aliens.draw(screen)
 
     #bambus
@@ -152,13 +152,13 @@ while running:
     bambus.draw(screen)
 
     #forrest
-    forrest.draw()
+    forrest.draw(screen)
 
     pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
 
     screen.blit(panda.icon,panda.rect) 
 
-    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((1-1/panda.shooting_speed)*10)}" , True, purple)
+    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((panda.shooting_speed))}" , True, purple)
     score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2-50, info_line_y))
     screen.blit(score_text, score_rect)
 

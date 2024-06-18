@@ -16,7 +16,7 @@ class Alien(pygame.sprite.Sprite):
         self.health = health
         self.speed = 2
         
-    def update(self,screen, panda,forrest, SCREEN_WIDTH, SCREEN_HEIGHT):
+    def update(self,screen, panda,bambus, SCREEN_WIDTH, SCREEN_HEIGHT): #<-> forrest
         #if alien hits panda:
         movement_v = [panda.rect.centerx-self.rect.centerx , panda.rect.centery-self.rect.centery]# collisions
         if np.linalg.norm(movement_v) <= 5:
@@ -28,7 +28,7 @@ class Alien(pygame.sprite.Sprite):
             text_render = self.font.render("💥" ,True, (255,255,255))
             text_rect = text_render.get_rect(center=self.rect.center)
             screen.blit(text_render, text_rect)
-            forrest.add(ammo.Forrest(self.rect.center))
+            bambus.add(ammo.Bambus(self.rect.center))
             self.kill()
         #else alien just follows panda:
         else:
