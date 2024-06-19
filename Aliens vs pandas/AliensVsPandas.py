@@ -27,11 +27,15 @@ from pygame.locals import (
     K_s
 )
 
+#level screen
+#hearts and speed boost (apfel), random spawn when aliens dies
+
+
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 800
 FPS = 100
-info_line_y = 10 
+info_line_y = 20 
 info_spacing = 75
 
 #colors
@@ -40,6 +44,19 @@ white = (255, 255, 255)
 purple =(234, 144, 255)
 orange =(255, 204, 153)
 font = pygame.font.Font(font_path, 20)
+
+levels = { # (alien:  size, speed, killsto move on, spawn_time )
+    1 : ([25,25],2,30,3),
+    2 : ([25,30],2,40,2),
+    3 : ([25,40],2,50,1),
+    4 : ([25,50],3,60,.5),
+    5 : ([30,50],3,70,0.4),
+    6 : ([40,60],4,80,.3),
+    7 : ([50,70],4,90,.2),
+    8 : ([50,80],4,100,.2),
+    9 : ([70,80],4,130,.1),
+    10 : ([80,80],4,2,180)
+}
 
 
 #FUnktions:
@@ -64,10 +81,17 @@ def show_text_on_screen(text, font_size, x_position = SCREEN_WIDTH // 2 ,y_posit
     text_rect = text_render.get_rect(center=(x_position, y_position))
     screen.blit(text_render, text_rect)
 
+def level_screen(current_level):
+    screen.fill((0,0,0))
+    show_text_on_screen("Congratulations", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
+    show_text_on_screen(f"You beat level {current_level}", 40, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    pygame.display.flip()
+    pygame.time.wait(3000)
+
 def start_screen():
     screen.fill((0,0,0))
     panda = Panda.Panda(size =150, pos= (SCREEN_WIDTH//3, SCREEN_HEIGHT//2-100))
-    alien = Alien.Alien(size= 150, pos= ((SCREEN_WIDTH//3) *3-150, SCREEN_HEIGHT//2-110))
+    alien = Alien.Alien(SCREEN_WIDTH, SCREEN_HEIGHT,size= (150,150), pos= ((SCREEN_WIDTH//3) *3-150, SCREEN_HEIGHT//2-110))
     screen.blit(panda.icon,panda.rect)
     screen.blit(alien.image,alien.rect)
     show_text_on_screen("Pandas vs. Aliens", 50,y_position = SCREEN_HEIGHT // 4)
@@ -75,11 +99,13 @@ def start_screen():
     pygame.display.flip()
     wait_for_key()
 
-def game_over_screen():
+
+
+def game_over_screen(current_level):
     screen.fill((0,0,0))
     show_text_on_screen("Game Over", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
-    show_text_on_screen(f"Your final score: {panda.score}", 30, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
-    show_text_on_screen("Press any key to restart...", 30, y_position= SCREEN_HEIGHT*2 // 3) 
+    show_text_on_screen(f"Your final level: {current_level}", 30, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    show_text_on_screen("Press any key to restart...", 30, y_position =SCREEN_HEIGHT // 3)
     pygame.display.flip()
     wait_for_key()
 
@@ -101,6 +127,11 @@ trees = pygame.sprite.Group()
 bambus = pygame.sprite.Group()
 forrest = pygame.sprite.Group()
 
+current_level = 1
+alien_size = levels[current_level][0]
+alien_speed = levels[current_level][1]
+spawn_time = levels[current_level][3]
+
 #run until user quits
 running = True 
 
@@ -112,6 +143,7 @@ start_screen()
 
 while running:
 
+    timer = time.time()
     for event in pygame.event.get():
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
@@ -139,12 +171,12 @@ while running:
     trees.draw(screen)
 
     
-    if  time.time()- alien_timer >= 3:
-        aliens.add(Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))))
+    if  time.time()- alien_timer >= spawn_time:
+        aliens.add(Alien.Alien(SCREEN_WIDTH, SCREEN_HEIGHT,current_level= current_level, size = alien_size, speed = alien_speed, ))
         alien_timer = time.time()
 
     #aliens
-    aliens.update(screen,panda,bambus,SCREEN_WIDTH, SCREEN_HEIGHT)
+    aliens.update(screen,panda,bambus,current_level)
     aliens.draw(screen)
 
     #bambus
@@ -158,18 +190,37 @@ while running:
 
     screen.blit(panda.icon,panda.rect) 
 
-    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((panda.shooting_speed))}" , True, purple)
-    score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2-50, info_line_y))
+    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((panda.shooting_speed))}    score: {panda.kills}" , True, purple)
+    score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
     screen.blit(score_text, score_rect)
 
     if panda.health <=0 :
-        game_over_screen()
+        game_over_screen(current_level)
         start_screen()
         panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
-        aliens = [Alien.Alien(pos = (random.uniform(SCREEN_WIDTH,SCREEN_WIDTH+1000),random.uniform(SCREEN_HEIGHT,SCREEN_HEIGHT))) for  i in range(0,1)]
+        aliens =pygame.sprite.Group()
+        trees = pygame.sprite.Group()
+        bambus = pygame.sprite.Group()
+        forrest = pygame.sprite.Group()
 
+        current_level = 1
+        alien_size = levels[current_level][0]
+        alien_speed = levels[current_level][1]
+        spawn_time = levels[current_level][3]
 
     pygame.display.flip()
+
+    if panda.kills >= levels[current_level][2]:
+        level_screen(current_level)
+        current_level += 1
+        alien_size = levels[current_level][0]
+        alien_speed = levels[current_level][1]
+        spawn_time = levels[current_level][3]
+        panda.kills = 0
+        aliens =pygame.sprite.Group()
+        trees = pygame.sprite.Group()
+        bambus = pygame.sprite.Group()
+        forrest = pygame.sprite.Group()
 
     # Control the frame rate
     clock.tick(FPS)

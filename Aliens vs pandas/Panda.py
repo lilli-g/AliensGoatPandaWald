@@ -25,8 +25,9 @@ class Panda(pygame.sprite.Sprite):
         self.icon = self.font.render("🐼" , True,(255,255,255))
         self.rect = self.icon.get_rect(topright=(pos[0], pos[1]))
         self.shooting_speed = 1
-        self.health =100
+        self.health =10
         self.score = 0
+        self.kills = 0
 
     def update(self,pressed_keys,bambus, SCREEN_WIDTH, SCREEN_HEIGHT): #<-> forrest
         #is panda out of border? --> teleport

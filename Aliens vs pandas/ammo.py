@@ -26,6 +26,7 @@ class Tree(pygame.sprite.Sprite):
             distance_alien= np.linalg.norm((alien.rect.centerx-self.rect.centerx , alien.rect.centery-self.rect.centery))
             if distance_alien <= (alien.size+self.size)//2:
                 alien.health -=1
+                self.kill()
         else:
             self.rect.move_ip(self.speed*self.aim[0], self.speed*self.aim[1])
 
@@ -51,5 +52,6 @@ class Bambus(pygame.sprite.Sprite):
         if distance_panda <= panda.size//2:
             self.tick -= 1
         if self.tick <= 0:
-            panda.shooting_speed += 1
+            panda.shooting_speed += .5
+            panda.speed += .1
             self.kill()
