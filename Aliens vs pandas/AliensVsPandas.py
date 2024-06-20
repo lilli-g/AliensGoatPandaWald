@@ -8,11 +8,16 @@ import numpy as np
 import time
 
 #to DO:
-#aliens -> forest
-#scoring system for Panda
-#GOAT
 #power ups
+#raketen
+#anzahl aliens begrenzen
+#level screen
+#hearts and speed boost (apfel), random spawn when aliens dies
+#aliens laufen nicht übereinander
+#erklärungsscreen
 
+
+#font_path = "seguiemj.ttf"
 font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
 
@@ -27,8 +32,7 @@ from pygame.locals import (
     K_s
 )
 
-#level screen
-#hearts and speed boost (apfel), random spawn when aliens dies
+
 
 
 
@@ -55,7 +59,7 @@ levels = { # (alien:  size, speed, killsto move on, spawn_time )
     7 : ([50,70],4,90,.2),
     8 : ([50,80],4,100,.2),
     9 : ([70,80],4,130,.1),
-    10 : ([80,80],4,2,180)
+    10 : (100,4,1,0)
 }
 
 
@@ -83,7 +87,7 @@ def show_text_on_screen(text, font_size, x_position = SCREEN_WIDTH // 2 ,y_posit
 
 def level_screen(current_level):
     screen.fill((0,0,0))
-    show_text_on_screen("Congratulations", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
+    show_text_on_screen("Congratulations!", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
     show_text_on_screen(f"You beat level {current_level}", 40, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     pygame.display.flip()
     pygame.time.wait(3000)
@@ -99,11 +103,17 @@ def start_screen():
     pygame.display.flip()
     wait_for_key()
 
-
+def end_screen():
+    screen.fill((0,0,0))
+    show_text_on_screen("Congrats!", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
+    show_text_on_screen(f"You defeated the GOAT ", 30, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+    show_text_on_screen("Press any key to restart...", 30, y_position =SCREEN_HEIGHT // 3)
+    pygame.display.flip()
+    wait_for_key()
 
 def game_over_screen(current_level):
     screen.fill((0,0,0))
-    show_text_on_screen("Game Over", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
+    show_text_on_screen("Game Over!", 50, SCREEN_WIDTH //2, SCREEN_HEIGHT // 4)
     show_text_on_screen(f"Your final level: {current_level}", 30, SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
     show_text_on_screen("Press any key to restart...", 30, y_position =SCREEN_HEIGHT // 3)
     pygame.display.flip()
@@ -128,9 +138,12 @@ bambus = pygame.sprite.Group()
 forrest = pygame.sprite.Group()
 
 current_level = 1
+end_level  = 10
 alien_size = levels[current_level][0]
 alien_speed = levels[current_level][1]
 spawn_time = levels[current_level][3]
+kills = levels[current_level][2]
+ 
 
 #run until user quits
 running = True 
@@ -171,9 +184,12 @@ while running:
     trees.draw(screen)
 
     
-    if  time.time()- alien_timer >= spawn_time:
-        aliens.add(Alien.Alien(SCREEN_WIDTH, SCREEN_HEIGHT,current_level= current_level, size = alien_size, speed = alien_speed, ))
-        alien_timer = time.time()
+    if  time.time()- alien_timer >= spawn_time and len(aliens.sprites()) < kills :
+        if current_level == end_level:
+            aliens.add(Alien.Goat(SCREEN_WIDTH, SCREEN_HEIGHT))
+        else:   
+            aliens.add(Alien.Alien(SCREEN_WIDTH, SCREEN_HEIGHT,current_level= current_level, size = alien_size, speed = alien_speed, ))
+            alien_timer = time.time()
 
     #aliens
     aliens.update(screen,panda,bambus,current_level)
@@ -190,7 +206,7 @@ while running:
 
     screen.blit(panda.icon,panda.rect) 
 
-    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((panda.shooting_speed))}    score: {panda.kills}" , True, purple)
+    score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((panda.shooting_speed))}    score: {panda.kills}    level:  {current_level} " , True, purple)
     score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
     screen.blit(score_text, score_rect)
 
@@ -203,6 +219,7 @@ while running:
         bambus = pygame.sprite.Group()
         forrest = pygame.sprite.Group()
 
+
         current_level = 1
         alien_size = levels[current_level][0]
         alien_speed = levels[current_level][1]
@@ -210,8 +227,16 @@ while running:
 
     pygame.display.flip()
 
-    if panda.kills >= levels[current_level][2]:
+    if panda.kills >= kills:
+        
+
         level_screen(current_level)
+        if current_level == end_level:
+            end_screen()
+            start_screen()
+            current_level = 0
+            panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
+
         current_level += 1
         alien_size = levels[current_level][0]
         alien_speed = levels[current_level][1]
@@ -222,6 +247,8 @@ while running:
         bambus = pygame.sprite.Group()
         forrest = pygame.sprite.Group()
 
+
+   
     # Control the frame rate
     clock.tick(FPS)
 

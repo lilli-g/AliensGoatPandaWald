@@ -1,7 +1,9 @@
 import pygame
 import numpy as np
 
+#font_path = "seguiemj.ttf"
 font_path = "./Fonts/seguiemj.ttf"
+
 pygame.init()
 font = pygame.font.Font(font_path, 20)
 
@@ -53,5 +55,38 @@ class Bambus(pygame.sprite.Sprite):
             self.tick -= 1
         if self.tick <= 0:
             panda.shooting_speed += .5
-            panda.speed += .1
+            self.kill()
+
+class Heart(pygame.sprite.Sprite):
+    def __init__(self,pos):
+        super(Heart, self).__init__()
+        self.size = 15
+        self.tick = 1
+        self.font = pygame.font.Font(font_path, self.size)
+        self.image = self.font.render("❤️" , True,(255,255,255))
+        self.rect = self.image.get_rect(topright=(pos[0], pos[1]))
+
+    def update(self,panda):
+        distance_panda= np.linalg.norm((panda.rect.centerx-self.rect.centerx , panda.rect.centery-self.rect.centery))
+        if distance_panda <= panda.size//2:
+            self.tick -= 1
+        if self.tick <= 0:
+            panda.health += 1
+            self.kill()
+
+class Apple(pygame.sprite.Sprite):
+    def __init__(self,pos):
+        super(Heart, self).__init__()
+        self.size = 15
+        self.tick = 1
+        self.font = pygame.font.Font(font_path, self.size)
+        self.image = self.font.render("🍎" , True,(255,255,255))
+        self.rect = self.image.get_rect(topright=(pos[0], pos[1]))
+
+    def update(self,panda):
+        distance_panda= np.linalg.norm((panda.rect.centerx-self.rect.centerx , panda.rect.centery-self.rect.centery))
+        if distance_panda <= panda.size//2:
+            self.tick -= 1
+        if self.tick <= 0:
+            panda.speed += .2
             self.kill()
