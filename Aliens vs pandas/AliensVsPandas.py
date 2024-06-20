@@ -8,11 +8,8 @@ import numpy as np
 import time
 
 #to DO:
-#power ups
 #raketen
 #anzahl aliens begrenzen
-#level screen
-#hearts and speed boost (apfel), random spawn when aliens dies
 #aliens laufen nicht übereinander
 #erklärungsscreen
 
