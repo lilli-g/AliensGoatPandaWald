@@ -39,7 +39,7 @@ class Alien(pygame.sprite.Sprite):
             screen.blit(text_render, text_rect)
 
             powerup = random.randint(0,4+current_level^2)
-            if powerup == 1:
+            if powerup == 1 or powerup == 4:
                 bambus.add(ammo.Bambus(self.rect.center))
             elif powerup == 2:
                 bambus.add(ammo.Heart(self.rect.center))

@@ -76,7 +76,7 @@ class Heart(pygame.sprite.Sprite):
 
 class Apple(pygame.sprite.Sprite):
     def __init__(self,pos):
-        super(Heart, self).__init__()
+        super(Apple, self).__init__()
         self.size = 15
         self.tick = 1
         self.font = pygame.font.Font(font_path, self.size)

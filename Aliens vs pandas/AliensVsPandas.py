@@ -8,10 +8,12 @@ import numpy as np
 import time
 
 #to DO:
+#schusswinkel
 #raketen
-#anzahl aliens begrenzen
 #aliens laufen nicht übereinander
 #erklärungsscreen
+#pause
+#
 
 
 #font_path = "seguiemj.ttf"
@@ -140,6 +142,7 @@ alien_size = levels[current_level][0]
 alien_speed = levels[current_level][1]
 spawn_time = levels[current_level][3]
 kills = levels[current_level][2]
+alien_count = 0
  
 
 #run until user quits
@@ -181,9 +184,10 @@ while running:
     trees.draw(screen)
 
     
-    if  time.time()- alien_timer >= spawn_time and len(aliens.sprites()) < kills :
+    if  time.time()- alien_timer >= spawn_time and alien_count < kills :
         if current_level == end_level:
             aliens.add(Alien.Goat(SCREEN_WIDTH, SCREEN_HEIGHT))
+            alien_count += 1
         else:   
             aliens.add(Alien.Alien(SCREEN_WIDTH, SCREEN_HEIGHT,current_level= current_level, size = alien_size, speed = alien_speed, ))
             alien_timer = time.time()
@@ -212,12 +216,14 @@ while running:
         start_screen()
         panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
         aliens =pygame.sprite.Group()
+        alien_count = 0
         trees = pygame.sprite.Group()
         bambus = pygame.sprite.Group()
         forrest = pygame.sprite.Group()
 
 
         current_level = 1
+        
         alien_size = levels[current_level][0]
         alien_speed = levels[current_level][1]
         spawn_time = levels[current_level][3]
@@ -240,6 +246,7 @@ while running:
         spawn_time = levels[current_level][3]
         panda.kills = 0
         aliens =pygame.sprite.Group()
+        alien_count = 0
         trees = pygame.sprite.Group()
         bambus = pygame.sprite.Group()
         forrest = pygame.sprite.Group()
