@@ -8,6 +8,7 @@ import numpy as np
 import time
 
 #to DO:
+#fix alien count
 #schusswinkel
 #raketen
 #aliens laufen nicht übereinander
