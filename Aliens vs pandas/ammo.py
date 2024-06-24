@@ -14,10 +14,17 @@ class Tree(pygame.sprite.Sprite):
         self.size = 15
         self.speed = 5
         self.aim = aim
+        self.posx = pos[0]
+        self.posy = pos[1]
         self.font = pygame.font.Font(font_path, self.size)
         self.image = self.font.render("🌲" , True,(255,255,255))
-        self.rect = self.image.get_rect(topright=(pos[0], pos[1]))
+        self.rect = self.image.get_rect(center=(pos[0], pos[1]))
 
+    def new_pos(self):
+        new_posx = self.speed
+        new_posy = self.speed * self.slope + self.intercept
+        return (new_posx, new_posy)
+        
     def update(self,aliens,SCREEN_WIDTH,SCREEN_HEIGHT):
         #löschen wenn out of bounds!!  
         if self.rect.centerx < 0 or self.rect.centerx > SCREEN_WIDTH or self.rect.centery < 0 or self.rect.centery > SCREEN_HEIGHT:
@@ -30,7 +37,11 @@ class Tree(pygame.sprite.Sprite):
                 alien.health -=1
                 self.kill()
         else:
-            self.rect.move_ip(self.speed*self.aim[0], self.speed*self.aim[1])
+            self.posx += self.speed*self.aim[0]
+            self.posy += self.speed*self.aim[1]
+            self.rect = self.image.get_rect(center=(self.posx, self.posy))
+
+
 
 class Forrest(pygame.sprite.Sprite):
     def __init__(self,pos):

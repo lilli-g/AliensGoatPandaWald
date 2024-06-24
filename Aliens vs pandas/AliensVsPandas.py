@@ -6,6 +6,7 @@ import sys
 import random
 import numpy as np
 import time
+from scipy import linalg
 
 #to DO:
 #schusswinkel
@@ -49,7 +50,7 @@ orange =(255, 204, 153)
 font = pygame.font.Font(font_path, 20)
 
 levels = { # (alien:  size, speed, killsto move on, spawn_time )
-    1 : ([25,25],2,5,3),
+    1 : ([25,25],1,30,3),
     2 : ([25,30],2,40,2),
     3 : ([25,40],2,50,1),
     4 : ([25,50],3,60,.5),
@@ -63,10 +64,12 @@ levels = { # (alien:  size, speed, killsto move on, spawn_time )
 
 
 #FUnktions:
-def get_aim(panda,mouse):
-    vector = (mouse[0] -  panda.rect.centerx, mouse[1] -  panda.rect.centery)
-    vector= vector/ np.linalg.norm(vector)
+def get_aim(panda):
+    vector = (pygame.mouse.get_pos()[0] -  panda.rect.centerx, pygame.mouse.get_pos()[1] -  panda.rect.centery)
+    vector= vector/ linalg.norm(vector)
     return vector
+
+
 
 def wait_for_key():
     waiting = True
@@ -145,7 +148,7 @@ kills = levels[current_level][2]
 alien_count = 0
  
 
-#run until user quits
+#run until user quitsd
 running = True 
 
 
@@ -168,11 +171,10 @@ while running:
     screen.fill((0, 0, 0))    
 
     pressed_keys = pygame.key.get_pressed()
-    mouse = pygame.mouse.get_pos()
 
     panda.update(pressed_keys,forrest,SCREEN_WIDTH, SCREEN_HEIGHT)
 
-    aim = get_aim(panda,mouse)
+    aim = get_aim(panda)
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
     
     #trees
