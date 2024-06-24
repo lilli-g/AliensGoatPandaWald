@@ -38,16 +38,19 @@ class Alien(pygame.sprite.Sprite):
             text_rect = text_render.get_rect(center=self.rect.center)
             screen.blit(text_render, text_rect)
 
-            powerup = random.randint(0,4+current_level^2)
-            if powerup == 1 or powerup == 4:
+            powerup = random.randint(0,9+current_level^2)
+            if powerup == 1 or powerup == 2:
                 bambus.add(ammo.Bambus(self.rect.center))
-            elif powerup == 2:
+            elif powerup == 3 or powerup == 4:
                 bambus.add(ammo.Heart(self.rect.center))
-            if powerup == 3:
+            if powerup == 5 or powerup == 6:
                 bambus.add(ammo.Apple(self.rect.center))
+            if powerup == 7:
+                bambus.add(ammo.rocket_pu(self.rect.center))
             
             panda.kills += 1
             self.kill()
+            
         #else alien just follows panda:
         else:
             normalized_v = movement_v / np.linalg.norm(movement_v)

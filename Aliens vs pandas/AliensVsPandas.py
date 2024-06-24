@@ -9,12 +9,11 @@ import time
 from scipy import linalg
 
 #to DO:
-#schusswinkel
 #raketen
 #aliens laufen nicht übereinander
 #erklärungsscreen
 #pause
-#
+
 
 
 #font_path = "seguiemj.ttf"
@@ -50,7 +49,7 @@ orange =(255, 204, 153)
 font = pygame.font.Font(font_path, 20)
 
 levels = { # (alien:  size, speed, killsto move on, spawn_time )
-    1 : ([25,25],1,30,3),
+    1 : ([25,25],2,30,2),
     2 : ([25,30],2,40,2),
     3 : ([25,40],2,50,1),
     4 : ([25,50],3,60,.5),
@@ -138,6 +137,7 @@ aliens =pygame.sprite.Group()
 trees = pygame.sprite.Group()
 bambus = pygame.sprite.Group()
 forrest = pygame.sprite.Group()
+rockets = pygame.sprite.Group()
 
 current_level = 1
 end_level  = 10
@@ -178,12 +178,19 @@ while running:
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
     
     #trees
-    if  time.time()- tree_timer >= 1/panda.shooting_speed:
+    if time.time()- tree_timer >= 1/panda.shooting_speed and panda.rocket_timer > 0:
+        rockets.add( ammo.Rocket(panda.rect.center, aim))
+        panda.rocket_timer -= 100    
+        tree_timer = time.time()
+    elif  time.time()- tree_timer >= 1/panda.shooting_speed:
         trees.add(ammo.Tree(panda.rect.center, aim))
         tree_timer = time.time()
     
     trees.update(aliens,SCREEN_WIDTH,SCREEN_HEIGHT)
     trees.draw(screen)
+    rockets.update(aliens,screen,SCREEN_WIDTH,SCREEN_HEIGHT)
+    rockets.draw(screen)
+
 
     
     if  time.time() - alien_timer >= spawn_time and alien_count <= kills :
@@ -214,7 +221,7 @@ while running:
     score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
     screen.blit(score_text, score_rect)
 
-    if panda.health <=0 :
+    if panda.health <= 0 :
         game_over_screen(current_level)
         start_screen()
         panda = Panda.Panda(pos = (0 +50, SCREEN_HEIGHT//2 +5))
@@ -255,7 +262,6 @@ while running:
         forrest = pygame.sprite.Group()
 
 
-   
     # Control the frame rate
     clock.tick(FPS)
 

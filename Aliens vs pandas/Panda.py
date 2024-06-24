@@ -31,6 +31,7 @@ class Panda(pygame.sprite.Sprite):
         self.health =10
         self.score = 0
         self.kills = 0
+        self.rocket_timer = 0
 
     def update(self,pressed_keys,bambus, SCREEN_WIDTH, SCREEN_HEIGHT): #<-> forrest
         #is panda out of border? --> teleport
