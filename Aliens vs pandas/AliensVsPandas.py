@@ -10,9 +10,7 @@ import time
 from scipy import linalg
 
 #to DO:
-#raketenwerfer
 #erklärungsscreen
-#pause
 
 
 
@@ -136,6 +134,34 @@ def game_over_screen(current_level):
     pygame.display.flip()
     wait_for_key()
 
+def paused():
+    pause = True
+    
+    while pause:
+        for event in pygame.event.get():
+
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit() 
+            if event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    running = False
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.key == pygame.K_c:
+                    pause = False
+
+        score_text = font.render("PAUSED", True, orange)
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, 200))
+        screen.blit(score_text, score_rect)
+                
+        score_text = font.render("To Continue press c", True, orange)
+        score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, 400))
+        screen.blit(score_text, score_rect)
+
+        pygame.display.update()
+        clock.tick(15)  
+
 
 def Raketenwerfer(aim):
     angle = calc_roation_angle(aim)
@@ -183,24 +209,30 @@ while running:
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 running = False
+            if event.key == pygame.K_p:
+                paused()
 
         if event.type == pygame.QUIT:
                 running = False
+        
 
     screen.fill((0, 0, 0))    
 
     pressed_keys = pygame.key.get_pressed()
 
     panda.update(pressed_keys,forrest,SCREEN_WIDTH, SCREEN_HEIGHT)
-    screen.blit(panda.icon,panda.rect) 
 
     aim = get_aim(panda)
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
+
     if panda.rocket_timer > 0:
         img = Raketenwerfer(aim)
+        screen.blit(panda.icon,panda.rect) 
         screen.blit(img, (panda.rect.centerx-15,panda.rect.centery-15))
+        
     else:
         pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
+        screen.blit(panda.icon,panda.rect) 
 
     #trees
     if time.time()- tree_timer >= 1/panda.shooting_speed and panda.rocket_timer > 0:
