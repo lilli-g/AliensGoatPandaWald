@@ -68,7 +68,7 @@ class Rocket(pygame.sprite.Sprite):
             distance_alien= np.linalg.norm((alien.rect.centerx-self.rect.centerx , alien.rect.centery-self.rect.centery))
             if distance_alien <= (alien.size+self.size)//2 + 50:
                 alien.health -=1+distance_alien
-                self.font = pygame.font.Font(font_path, 50)
+                self.font = pygame.font.Font(font_path, 100)
                 text_render = self.font.render("💥" ,True, (255,255,255))
                 text_rect = text_render.get_rect(center=self.rect.center)
                 screen.blit(text_render, text_rect)
@@ -151,5 +151,5 @@ class rocket_pu(pygame.sprite.Sprite):
         if distance_panda <= panda.size//2:
             self.tick -= 1
         if self.tick <= 0:
-            panda.rocket_timer += 500
+            panda.rocket_timer += 700
             self.kill()

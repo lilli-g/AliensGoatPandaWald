@@ -2,6 +2,7 @@ import Panda
 import Alien
 import ammo
 import pygame
+import math
 import sys
 import random
 import numpy as np
@@ -9,8 +10,7 @@ import time
 from scipy import linalg
 
 #to DO:
-#raketen
-#aliens laufen nicht übereinander
+#raketenwerfer
 #erklärungsscreen
 #pause
 
@@ -40,6 +40,10 @@ SCREEN_HEIGHT = 800
 FPS = 100
 info_line_y = 20 
 info_spacing = 75
+weaponImg = pygame.image.load('Aliens vs pandas\Raketenwerfer.png')
+width = weaponImg.get_rect().width
+height = weaponImg.get_rect().height
+weaponImg = pygame.transform.scale(weaponImg, (width/20, height/20))
 
 #colors
 red = (255, 0, 0)
@@ -68,7 +72,19 @@ def get_aim(panda):
     vector= vector/ linalg.norm(vector)
     return vector
 
-
+def calc_roation_angle(aim):
+    v1 = (0,10)
+    v0 = aim
+    angle = np.math.atan2(np.linalg.det([v0,v1]),np.dot(v0,v1))
+    angle=  np.degrees(angle)
+    while 0 > angle or angle >= 360:
+        if angle < 0:
+            angle = 360 + angle
+        if angle > 360 :
+            angle -= 360
+        if angle == 360:
+            angle = 0
+    return angle
 
 def wait_for_key():
     waiting = True
@@ -121,7 +137,10 @@ def game_over_screen(current_level):
     wait_for_key()
 
 
-
+def Raketenwerfer(aim):
+    angle = calc_roation_angle(aim)
+    rota_image = pygame.transform.rotate(weaponImg, angle+180)
+    return rota_image
 
 
 
@@ -146,7 +165,7 @@ alien_speed = levels[current_level][1]
 spawn_time = levels[current_level][3]
 kills = levels[current_level][2]
 alien_count = 0
- 
+img = 0 
 
 #run until user quitsd
 running = True 
@@ -173,13 +192,19 @@ while running:
     pressed_keys = pygame.key.get_pressed()
 
     panda.update(pressed_keys,forrest,SCREEN_WIDTH, SCREEN_HEIGHT)
+    screen.blit(panda.icon,panda.rect) 
 
     aim = get_aim(panda)
     end_of_weapon = (panda.rect.centerx + aim[0]*25, panda.rect.centery + aim[1]*25)
-    
+    if panda.rocket_timer > 0:
+        img = Raketenwerfer(aim)
+        screen.blit(img, (panda.rect.centerx-15,panda.rect.centery-15))
+    else:
+        pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
+
     #trees
     if time.time()- tree_timer >= 1/panda.shooting_speed and panda.rocket_timer > 0:
-        rockets.add( ammo.Rocket(panda.rect.center, aim))
+        rockets.add( ammo.Rocket((panda.rect.centerx+15,panda.rect.centery+15), aim))
         panda.rocket_timer -= 100    
         tree_timer = time.time()
     elif  time.time()- tree_timer >= 1/panda.shooting_speed:
@@ -193,7 +218,7 @@ while running:
 
 
     
-    if  time.time() - alien_timer >= spawn_time and alien_count <= kills :
+    if  time.time() - alien_timer >= spawn_time and alien_count < kills :
         if current_level == end_level:
             aliens.add(Alien.Goat(SCREEN_WIDTH, SCREEN_HEIGHT))
             alien_count += 1
@@ -212,10 +237,8 @@ while running:
 
     #forrest
     forrest.draw(screen)
-
-    pygame.draw.line(screen,white,panda.rect.center,end_of_weapon, 10)
-
-    screen.blit(panda.icon,panda.rect) 
+    
+    
 
     score_text = font.render(f"Heath: {int(panda.health)}   speed: {int((panda.shooting_speed))}    kills: {panda.kills}    level:  {current_level} " , True, purple)
     score_rect = score_text.get_rect(center=(SCREEN_WIDTH//2, info_line_y))
@@ -260,7 +283,6 @@ while running:
         trees = pygame.sprite.Group()
         bambus = pygame.sprite.Group()
         forrest = pygame.sprite.Group()
-
 
     # Control the frame rate
     clock.tick(FPS)
