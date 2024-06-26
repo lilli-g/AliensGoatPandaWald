@@ -9,11 +9,6 @@ import numpy as np
 import time
 from scipy import linalg
 
-#to DO:
-#erklärungsscreen
-
-
-
 #font_path = "seguiemj.ttf"
 font_path = "./Fonts/seguiemj.ttf"
 pygame.init()
@@ -107,6 +102,16 @@ def level_screen(current_level):
     pygame.display.flip()
     pygame.time.wait(3000)
 
+def explanation_screen():
+    screen.fill((0,0,0))
+    show_text_on_screen("How to Play:", 50,y_position = SCREEN_HEIGHT // 4)
+    show_text_on_screen("Press w,a,s,d to move", 30, y_position =SCREEN_HEIGHT // 3)
+    show_text_on_screen("aim by moving your mouse", 30, y_position =SCREEN_HEIGHT // 3+50)
+    show_text_on_screen("pause the game by pressing p anytime during the game", 30, y_position =SCREEN_HEIGHT // 3+100)
+    show_text_on_screen("Press any key to start...", 30, y_position =SCREEN_HEIGHT // 3+150)
+    pygame.display.flip()
+    wait_for_key()
+
 def start_screen():
     screen.fill((0,0,0))
     panda = Panda.Panda(size =150, pos= (SCREEN_WIDTH//3, SCREEN_HEIGHT//2-100))
@@ -117,6 +122,8 @@ def start_screen():
     show_text_on_screen("Press any key to start...", 30, y_position =SCREEN_HEIGHT // 3)
     pygame.display.flip()
     wait_for_key()
+    explanation_screen()
+
 
 def end_screen():
     screen.fill((0,0,0))
