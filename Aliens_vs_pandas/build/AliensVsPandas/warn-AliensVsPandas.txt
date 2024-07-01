@@ -148,7 +148,7 @@ missing module named numpy.expand_dims - imported by numpy (top-level), numpy.ma
 missing module named numpy.iscomplexobj - imported by numpy (top-level), numpy.ma.core (top-level), scipy.linalg._decomp (top-level), scipy.linalg._decomp_ldl (top-level)
 missing module named numpy.amin - imported by numpy (top-level), numpy.ma.core (top-level), scipy.stats._morestats (top-level)
 missing module named numpy.amax - imported by numpy (top-level), numpy.ma.core (top-level), scipy.linalg._matfuncs (top-level), scipy.stats._morestats (top-level)
-missing module named threadpoolctl - imported by numpy.lib.utils (delayed, optional)
+missing module named pyodide_js - imported by threadpoolctl (delayed, optional)
 missing module named numpy.core.ufunc - imported by numpy.core (top-level), numpy.lib.utils (top-level)
 missing module named numpy.core.ones - imported by numpy.core (top-level), numpy.lib.polynomial (top-level)
 missing module named numpy.core.hstack - imported by numpy.core (top-level), numpy.lib.polynomial (top-level)

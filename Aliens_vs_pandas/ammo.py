@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 
 #font_path = "seguiemj.ttf"
-font_path = "./Fonts/seguiemj.ttf"
+font_path = "seguiemj.ttf"
 
 pygame.init()
 font = pygame.font.Font(font_path, 20)

@@ -10,7 +10,7 @@ import time
 from scipy import linalg
 
 #font_path = "seguiemj.ttf"
-font_path = "./Fonts/seguiemj.ttf"
+font_path = "seguiemj.ttf"
 pygame.init()
 
 
@@ -33,7 +33,7 @@ SCREEN_HEIGHT = 800
 FPS = 100
 info_line_y = 20 
 info_spacing = 75
-weaponImg = pygame.image.load('Aliens vs pandas\Raketenwerfer.png')
+weaponImg = pygame.image.load('Raketenwerfer.png')
 width = weaponImg.get_rect().width
 height = weaponImg.get_rect().height
 weaponImg = pygame.transform.scale(weaponImg, (width/20, height/20))
@@ -55,7 +55,12 @@ levels = { # (alien:  size, speed, killsto move on, spawn_time )
     7 : ([50,70],4,90,.2),
     8 : ([50,80],4,100,.2),
     9 : ([70,80],4,130,.1),
-    10 : (100,4,1,0)
+    10 : ([70,90],4,150,.1),
+    11: ([70,100],4,150,.1),
+    12: ([80,100],4,130,.1),
+    13 : ([80,110],4,130,.05),
+    14 : ([90,110],4,130,.05),
+    15 : (100,5,1,0)
 }
 
 
@@ -192,7 +197,7 @@ forrest = pygame.sprite.Group()
 rockets = pygame.sprite.Group()
 
 current_level = 1
-end_level  = 10
+end_level  = 15
 alien_size = levels[current_level][0]
 alien_speed = levels[current_level][1]
 spawn_time = levels[current_level][3]
@@ -202,10 +207,7 @@ img = 0
 
 #run until user quitsd
 running = True 
-
-
-
-
+ 
 
 start_screen()
 
@@ -259,7 +261,7 @@ while running:
     
     if  time.time() - alien_timer >= spawn_time and alien_count < kills :
         if current_level == end_level:
-            aliens.add(Alien.Goat(SCREEN_WIDTH, SCREEN_HEIGHT))
+            aliens.add(Alien.Goat(SCREEN_WIDTH, SCREEN_HEIGHT,size = alien_size, speed = alien_speed))
             alien_count += 1
         else:   
             aliens.add(Alien.Alien(SCREEN_WIDTH, SCREEN_HEIGHT,current_level= current_level, size = alien_size, speed = alien_speed, ))

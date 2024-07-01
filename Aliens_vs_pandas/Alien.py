@@ -5,7 +5,7 @@ import random
 
 pygame.init()
 #font_path = "seguiemj.ttf"
-font_path = "./Fonts/seguiemj.ttf"
+font_path = "seguiemj.ttf"
 
 
 class Alien(pygame.sprite.Sprite):
@@ -78,7 +78,7 @@ class Goat(pygame.sprite.Sprite):
         movement_v = [panda.rect.centerx-self.rect.centerx , panda.rect.centery-self.rect.centery]# collisions
         if np.linalg.norm(movement_v) <= 5:
             self.rect.move_ip(0,0)
-            panda.health -=0.5
+            panda.health -=0.1
 
         elif self.health <= 1:
             #small explosion:
