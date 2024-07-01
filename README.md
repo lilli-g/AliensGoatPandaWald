@@ -1,1 +1,1 @@
-Just a small project to try the basics of game development
+# Just a small project to try the basics of game development
